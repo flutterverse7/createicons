@@ -9,41 +9,34 @@ import 'package:image/image.dart' as img;
 
 class ImageProcessing {
   static Future<XFile> uint8ListToXFile(img.Image finalImage) async {
-    // Get the temporary directory
+    
     final directory = await getTemporaryDirectory();
     List<int> pngBytes = img.encodePng(finalImage);
     Uint8List imageBytes = Uint8List.fromList(pngBytes);
-    // Define the path for the temporary file
+    
     final tempPath =
         '${directory.path}/output_image${DateTime.now().millisecondsSinceEpoch}.png';
 
-    // Write the image data to the file
     final file = File(tempPath);
     await file.writeAsBytes(imageBytes);
 
-    // Return the file as an XFile
     return XFile(file.path);
   }
 
   static Future<XFile> processImage(
       String imagePath, int index, bool addlogo) async {
     final imageBytes =
-        File(imagePath).readAsBytesSync(); // Load the captured image
+        File(imagePath).readAsBytesSync(); 
     img.Image sourceImage = img.decodeImage(imageBytes)!;
 
-    // Load the mask image
     ByteData maskData = await rootBundle.load(livemasks[index]);
     Uint8List maskBytes = maskData.buffer.asUint8List();
     img.Image maskImage = img.decodeImage(maskBytes)!;
-
-    // Resize the source image to match the mask's dimensions
     img.Image resizedSourceImage = img.copyResize(sourceImage,
         width: maskImage.width, height: maskImage.height);
 
-    // Create the mask
     img.Image mask = createMask(maskImage);
 
-    // Apply the mask to the resized image
     img.Image finalImg = applyMask(resizedSourceImage, mask);
     img.Image finalImage = finalImg;
     if (addlogo) {
@@ -61,7 +54,7 @@ class ImageProcessing {
     img.Image mask =
         img.copyResize(image, width: image.width, height: image.height);
 
-    // Apply Gaussian blur
+   
     mask = img.gaussianBlur(mask, radius: 3);
 
     for (int y = 0; y < mask.height; y++) {
@@ -99,17 +92,17 @@ class ImageProcessing {
 
     try {
       if (capturedImages.length == 1) {
-        // Share a single file with text
+       
         await Share.shareXFiles(
           capturedImages,
           text: 'Check out this shaped image!',
           subject: 'Shaped Image',
         );
       } else {
-        // Share multiple files; Android expects no "text" or an array
+        
         await Share.shareXFiles(
           capturedImages,
-          subject: 'Shaped Images', // Add a subject or leave empty
+          subject: 'Shaped Images', 
         );
       }
     } catch (e) {

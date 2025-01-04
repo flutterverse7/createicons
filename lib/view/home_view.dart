@@ -50,20 +50,15 @@ class _MultiMaskCameraState extends State<MultiMaskCamera> {
 
   Future<void> _takePicture() async {
     try {
-      // Ensure the camera controller is initialized
       await _initializeControllerFuture;
 
       setState(() {
         _isProcessing = true;
       });
-      // Capture the picture
       final image = await _cameraController.takePicture();
 
-      // Perform image processing asynchronously
       final processedImage = await ImageProcessing.processImage(
           image.path, _selectedMaskIndex, addLogo);
-
-      // Update the state after processing is complete
       setState(() {
         _isProcessing = false;
         capturedImage = processedImage;
@@ -73,14 +68,6 @@ class _MultiMaskCameraState extends State<MultiMaskCamera> {
       print(e);
     }
   }
-
-  // Future<void> _takePicture() async {
-  //   try {
-  //     await _initializeControllerFuture;
-  //     final image = await _cameraController.takePicture();
-  //     setState(() {
-  //       _isProcessing = true;
-  //     });
 
   Future<void> _toggleFlash() async {
     if (!_cameraController.value.isInitialized) {
@@ -241,7 +228,6 @@ class _MultiMaskCameraState extends State<MultiMaskCamera> {
                                       File(capturedImages[index].path),
                                       width: 80,
                                       fit: BoxFit.cover,
-              
                                     ),
                                   ),
                                 );
