@@ -241,6 +241,7 @@ class _MultiMaskCameraState extends State<MultiMaskCamera> {
                                       File(capturedImages[index].path),
                                       width: 80,
                                       fit: BoxFit.cover,
+              
                                     ),
                                   ),
                                 );
